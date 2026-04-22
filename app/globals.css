@@ -1,0 +1,295 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --mi9-black: #080810;
+  --mi9-navy: #0d1b3e;
+  --mi9-red: #ff1744;
+  --mi9-red-dim: #cc1236;
+  --mi9-white: #edeef5;
+  --mi9-white-muted: #8a8ba8;
+  --mi9-border: rgba(255, 255, 255, 0.07);
+  --mi9-glass: rgba(255, 255, 255, 0.04);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  position: relative;
+  background:
+    radial-gradient(circle at 14% 18%, rgba(255, 23, 68, 0.14), transparent 26%),
+    radial-gradient(circle at 84% 12%, rgba(13, 27, 62, 0.55), transparent 30%),
+    radial-gradient(circle at 72% 74%, rgba(255, 23, 68, 0.09), transparent 24%),
+    linear-gradient(180deg, #080810 0%, #06060c 45%, #040409 100%);
+  color: var(--mi9-white);
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  pointer-events: none;
+  opacity: 0.03;
+  background: repeating-linear-gradient(
+    to bottom,
+    rgba(255, 255, 255, 0.18) 0,
+    rgba(255, 255, 255, 0.18) 1px,
+    transparent 1px,
+    transparent 4px
+  );
+}
+
+::selection {
+  background: rgba(255, 23, 68, 0.3);
+  color: var(--mi9-white);
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.03);
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 23, 68, 0.3);
+  border-radius: 999px;
+}
+
+@layer base {
+  h1,
+  h2 {
+    font-family: var(--font-display);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+
+  p,
+  a,
+  button,
+  input,
+  textarea,
+  label {
+    font-family: var(--font-body);
+  }
+}
+
+@layer components {
+  .mi9-shell {
+    @apply mx-auto w-full max-w-[1200px] px-6 md:px-8;
+  }
+
+  .mi9-section {
+    padding-block: clamp(80px, 10vw, 140px);
+  }
+
+  .mi9-panel {
+    border: 1px solid var(--mi9-border);
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.025));
+    backdrop-filter: blur(18px);
+  }
+
+  .mi9-grid {
+    background-image:
+      linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+    background-size: 48px 48px;
+  }
+}
+
+.noise-overlay {
+  position: absolute;
+  inset: 0;
+  opacity: 0.025;
+  background: rgba(255, 255, 255, 0.22);
+  mix-blend-mode: soft-light;
+  filter: url(#mi9-noise);
+}
+
+.glitch {
+  position: relative;
+  display: inline-block;
+}
+
+.glitch::before,
+.glitch::after {
+  content: attr(data-text);
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.glitch::before {
+  color: rgba(255, 23, 68, 0.85);
+  text-shadow: -2px 0 rgba(255, 23, 68, 0.4);
+  clip-path: inset(0 0 50% 0);
+}
+
+.glitch::after {
+  color: rgba(90, 169, 255, 0.65);
+  text-shadow: 2px 0 rgba(90, 169, 255, 0.35);
+  clip-path: inset(45% 0 0 0);
+}
+
+.glitch-auto::before {
+  animation: glitch-upper 650ms steps(2, end) var(--glitch-delay, 3s) 1 both;
+}
+
+.glitch-auto::after {
+  animation: glitch-lower 650ms steps(2, end) calc(var(--glitch-delay, 3s) + 60ms) 1 both;
+}
+
+.glitch:hover::before,
+.glitch:hover::after {
+  opacity: 1;
+}
+
+.glitch:hover::before {
+  animation: glitch-upper 400ms steps(2, end) 0s 1 both;
+}
+
+.glitch:hover::after {
+  animation: glitch-lower 400ms steps(2, end) 0s 1 both;
+}
+
+.status-pulse {
+  animation: red-pulse 1.8s ease-in-out infinite;
+}
+
+.client-dot {
+  animation: green-blink 1.6s ease-in-out infinite;
+}
+
+.scroll-dot {
+  animation: scroll-drift 2.2s ease-in-out infinite;
+}
+
+.redaction-title {
+  position: relative;
+  display: inline-block;
+  overflow: hidden;
+}
+
+.redaction-title::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: var(--mi9-red);
+  transform: translateX(0%);
+}
+
+.redaction-title.is-visible::after {
+  animation: unredact 0.85s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+.hex-avatar {
+  clip-path: polygon(25% 6.7%, 75% 6.7%, 100% 50%, 75% 93.3%, 25% 93.3%, 0% 50%);
+}
+
+@keyframes glitch-upper {
+  0%,
+  100% {
+    opacity: 0;
+    transform: translate3d(0, 0, 0) skewX(0deg);
+  }
+  10%,
+  35%,
+  60% {
+    opacity: 1;
+  }
+  20% {
+    transform: translate3d(-5px, 0, 0) skewX(-16deg);
+  }
+  45% {
+    transform: translate3d(4px, -2px, 0) skewX(12deg);
+  }
+  75% {
+    transform: translate3d(-3px, 2px, 0) skewX(-10deg);
+  }
+}
+
+@keyframes glitch-lower {
+  0%,
+  100% {
+    opacity: 0;
+    transform: translate3d(0, 0, 0) skewX(0deg);
+  }
+  8%,
+  30%,
+  66% {
+    opacity: 1;
+  }
+  18% {
+    transform: translate3d(5px, 0, 0) skewX(16deg);
+  }
+  42% {
+    transform: translate3d(-4px, 3px, 0) skewX(-14deg);
+  }
+  70% {
+    transform: translate3d(2px, -2px, 0) skewX(8deg);
+  }
+}
+
+@keyframes red-pulse {
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.35);
+    opacity: 0.45;
+  }
+}
+
+@keyframes green-blink {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.35;
+  }
+}
+
+@keyframes scroll-drift {
+  0% {
+    transform: translateY(0);
+    opacity: 0.5;
+  }
+  50% {
+    transform: translateY(18px);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 0.5;
+  }
+}
+
+@keyframes unredact {
+  to {
+    transform: translateX(-104%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
